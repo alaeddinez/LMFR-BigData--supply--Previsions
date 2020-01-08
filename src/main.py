@@ -1,6 +1,8 @@
 import pandas as pd
 import numpy as np
 import datetime
+from data import LoadSales
+
 import plotly.graph_objs as go
 import plotly.offline as pyoff
 from keras.models import Sequential
@@ -11,8 +13,8 @@ from keras.layers import LSTM
 from keras.models import Sequential
 
 
-weekly_sales = pd.read_csv("weekly_sales.csv", sep = ";")
-monthly_sales = pd.read_csv("monthly_sales.csv", sep = ";")
+#weekly_sales = pd.read_csv("weekly_sales.csv", sep = ";")
+#monthly_sales = pd.read_csv("monthly_sales.csv", sep = ";")
 
 #formating data into the good format to forecast
 
