@@ -1,5 +1,3 @@
-#TODO: create a class "AggregateSales containing these function
-#use the exemple in this link :  https://github.com/adeo/lmfr--bigdata--references-make-up/blob/master/src/data/ticket.py
 import pandas as pd 
 from .utils import read_sql
 from skbox.connectors.bigquery import BigQuery
@@ -78,7 +76,7 @@ class LoadSales():
             transformed_sales = monthly_sales.fillna(0)
         #TODO : prepare the transformation in case of week
         elif freq == 'week':
-            agg_data = self.agg_weekly_sales()
+            weekly_sales = self.agg_weekly_sales()
         else:
             log.info("ERROR argument perimeter")
             sys.exit()
