@@ -3,7 +3,7 @@ import numpy as np
 import datetime
 from data import LoadSales
 import logging as log
-from models import classic_ts
+from models import *
 if __name__ == "__main__":
 
     ############################################
@@ -13,6 +13,18 @@ if __name__ == "__main__":
     df_i = data.transform(freq ="month",sku = 69239730)
     data = df_i.sales
     # data split
-    n_test = 12
+    n_test = 14
     # model configs
-    cfg_list = exp_smoothing_configs(seasonal=[12])
+    #TODO:adding/deleting other elemnts in seasonal
+    cfg_list = exp_smoothing_configs(seasonal=[0,6,12])
+    scores = grid_search(data, cfg_list, n_test)
+    print('done')
+    # list top 3 configs
+    for cfg, error in scores[:3]:
+        print(cfg, error)
+    
+
+    # grid search
+    scores = grid_search(np.array(data), cfg_list, n_test)
+
+    #forecast the data
