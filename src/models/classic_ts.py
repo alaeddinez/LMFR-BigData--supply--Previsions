@@ -13,14 +13,16 @@ from numpy import array
 import pandas as pd
 # grid search ets models for monthly car sales
  
-# one-step Holt Winter’s Exponential Smoothing forecast
+# one-step Holt Winter Exponential Smoothing forecast
 def exp_smoothing_forecast(history, config):
 	t,d,s,p,b,r = config
 	# define model
 	history = array(history)
 	model = ExponentialSmoothing(history, trend=t, damped=d, seasonal=s, seasonal_periods=p)
 	# fit model
-	model_fit = model.fit(optimized=True, use_boxcox=b, remove_bias=r)
+	model_fit = model.fit(optimized=True
+                         #, use_boxcox=b, remove_bias=r
+                         )
 	# make one step forecast
 	yhat = model_fit.predict(len(history), len(history))
 	return yhat[0]
@@ -89,17 +91,26 @@ def grid_search(data, cfg_list, n_test, parallel=True):
 	# sort configs by error, asc
 	scores.sort(key=lambda tup: tup[1])
 	return scores
-
+#TODO: deleting some extra uncessary params to accelerate the process
 # create a set of exponential smoothing configs to try
 def exp_smoothing_configs(seasonal=[None]):
 	models = list()
 	# define config lists
-	t_params = ['add', 'mul', None]
-	d_params = [True, False]
-	s_params = ['add', 'mul', None]
+	t_params = ['add', 'mul'
+                #, None
+	]
+	d_params = [True, False
+	]
+	s_params = ['add', 'mul'
+                #, None
+	]
 	p_params = seasonal
-	b_params = [True, False]
-	r_params = [True, False]
+	b_params = [True
+                #, False
+	]
+	r_params = [True
+                #, False
+	]
 	# create config instances
 	for t in t_params:
 		for d in d_params:
@@ -123,27 +134,3 @@ def forecast_model(history, config,h):
     yhat = model_fit.predict(start=len(history), end = len(history)+ h)
     return yhat
 
-
-
-
-
-
-
-
-
-
-
-
-# link_ex = "https://raw.githubusercontent.com/jbrownlee/Datasets/master/monthly-car-sales.csv"
-# series = pd.read_csv(link_ex, header=0, index_col=0)
-# data = series.values
-# # data split
-# n_test = 12
-# # model configs
-# cfg_list = exp_smoothing_configs(seasonal=[0,6,12])
-# # grid search
-# scores = grid_search(data[:,0], cfg_list, n_test)
-# print('done')
-# # list top 3 configs
-# for cfg, error in scores[:3]:
-#     print(cfg, error)
