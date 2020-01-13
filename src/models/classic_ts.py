@@ -96,12 +96,12 @@ def grid_search(data, cfg_list, n_test, parallel=True):
 def exp_smoothing_configs(seasonal=[None]):
 	models = list()
 	# define config lists
-	t_params = ['add', 'mul'
+	t_params = ['add'#, 'mul'
                 #, None
 	]
 	d_params = [True, False
 	]
-	s_params = ['add', 'mul'
+	s_params = ['add'#, 'mul'
                 #, None
 	]
 	p_params = seasonal
@@ -129,7 +129,8 @@ def forecast_model(history, config,h):
     history = array(history)
     model = ExponentialSmoothing(history, trend=t, damped=d, seasonal=s, seasonal_periods=p)
     # fit model
-    model_fit = model.fit(optimized=True, use_boxcox=b, remove_bias=r)
+    model_fit = model.fit(optimized=True, #use_boxcox=b, #remove_bias=r
+	)
     #make one step forecast
     yhat = model_fit.predict(start=len(history), end = len(history)+ h)
     return yhat

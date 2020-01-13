@@ -1,0 +1,116 @@
+processing the SKU n° 36633331
+not enough data to forecast the sku n° 36633331
+processing the SKU n° 60191215
+ > Model[['add', False, 'add', 6, True, True]] 1.739
+ > Model[['add', False, 'add', 12, True, True]] 1.986
+ > Model[['add', True, 'add', 12, True, True]] 1.816
+ > Model[['add', True, 'add', 6, True, True]] 1.576
+***********simulation done**********
+processing the SKU n° 60191530
+main.py:40: SettingWithCopyWarning: 
+A value is trying to be set on a copy of a slice from a DataFrame
+
+See the caveats in the documentation: http://pandas.pydata.org/pandas-docs/stable/indexing.html#indexing-view-versus-copy
+  data_final.forecast[-n_test:]= y_hat_test
+/home/alaeddinez/anaconda3/lib/python3.7/site-packages/pandas/plotting/_converter.py:129: FutureWarning: Using an implicitly registered datetime converter for a matplotlib plotting method. The converter was registered by pandas on import. Future versions of pandas will require you to explicitly register matplotlib converters.
+
+To register the converters:
+	>>> from pandas.plotting import register_matplotlib_converters
+	>>> register_matplotlib_converters()
+  warnings.warn(msg, FutureWarning)
+ > Model[['add', False, 'add', 6, True, True]] 1.092
+ > Model[['add', False, 'add', 12, True, True]] 1.341
+ > Model[['add', True, 'add', 12, True, True]] 1.236
+ > Model[['add', True, 'add', 6, True, True]] 1.032
+***********simulation done**********
+processing the SKU n° 60388524
+ > Model[['add', False, 'add', 12, True, True]] 2.136
+ > Model[['add', False, 'add', 6, True, True]] 1.126
+ > Model[['add', True, 'add', 6, True, True]] 1.381
+ > Model[['add', True, 'add', 12, True, True]] 2.123
+***********simulation done**********
+processing the SKU n° 60388552
+ > Model[['add', False, 'add', 6, True, True]] 1.923
+ > Model[['add', False, 'add', 12, True, True]] 2.501
+ > Model[['add', True, 'add', 6, True, True]] 1.917
+ > Model[['add', True, 'add', 12, True, True]] 2.065
+***********simulation done**********
+processing the SKU n° 60388573
+ > Model[['add', False, 'add', 12, True, True]] 1.834
+ > Model[['add', False, 'add', 6, True, True]] 1.534
+ > Model[['add', True, 'add', 12, True, True]] 1.840
+ > Model[['add', True, 'add', 6, True, True]] 1.557
+***********simulation done**********
+processing the SKU n° 60388580
+ > Model[['add', False, 'add', 12, True, True]] 1.334
+ > Model[['add', False, 'add', 6, True, True]] 1.089
+ > Model[['add', True, 'add', 12, True, True]] 1.316
+ > Model[['add', True, 'add', 6, True, True]] 1.087
+***********simulation done**********
+processing the SKU n° 60417196
+ > Model[['add', False, 'add', 6, True, True]] 0.792
+ > Model[['add', False, 'add', 12, True, True]] 1.783
+ > Model[['add', True, 'add', 12, True, True]] 1.400
+ > Model[['add', True, 'add', 6, True, True]] 0.756
+***********simulation done**********
+processing the SKU n° 60454576
+ > Model[['add', False, 'add', 6, True, True]] 1.970
+ > Model[['add', False, 'add', 12, True, True]] 2.225
+ > Model[['add', True, 'add', 6, True, True]] 1.911
+ > Model[['add', True, 'add', 12, True, True]] 2.114
+***********simulation done**********
+processing the SKU n° 60454590
+ > Model[['add', False, 'add', 6, True, True]] 2.429
+ > Model[['add', False, 'add', 12, True, True]] 2.476
+ > Model[['add', True, 'add', 6, True, True]] 2.438
+ > Model[['add', True, 'add', 12, True, True]] 2.483
+***********simulation done**********
+processing the SKU n° 61117735
+ > Model[['add', False, 'add', 12, True, True]] 2.517
+ > Model[['add', False, 'add', 6, True, True]] 2.239
+ > Model[['add', True, 'add', 12, True, True]] 2.347
+***********simulation done**********
+processing the SKU n° 62182680
+ > Model[['add', False, 'add', 6, True, True]] 5.347
+ > Model[['add', False, 'add', 12, True, True]] 5.222
+ > Model[['add', True, 'add', 6, True, True]] 5.376
+ > Model[['add', True, 'add', 12, True, True]] 5.223
+***********simulation done**********
+processing the SKU n° 62183023
+ > Model[['add', False, 'add', 6, True, True]] 13.373
+ > Model[['add', False, 'add', 12, True, True]] 20.185
+ > Model[['add', True, 'add', 12, True, True]] 21.822
+***********simulation done**********
+processing the SKU n° 62594840
+not enough data to forecast the sku n° 62594840
+processing the SKU n° 63931931
+ > Model[['add', False, 'add', 12, True, True]] 4.827
+ > Model[['add', False, 'add', 6, True, True]] 4.413
+ > Model[['add', True, 'add', 12, True, True]] 4.827
+ > Model[['add', True, 'add', 6, True, True]] 4.412
+***********simulation done**********
+processing the SKU n° 63932421
+ > Model[['add', False, 'add', 12, True, True]] 4.758
+ > Model[['add', False, 'add', 6, True, True]] 0.666
+ > Model[['add', True, 'add', 6, True, True]] 0.526
+ > Model[['add', True, 'add', 12, True, True]] 3.879
+***********simulation done**********
+processing the SKU n° 64133391
+ > Model[['add', False, 'add', 12, True, True]] 35.163
+ > Model[['add', False, 'add', 6, True, True]] 40.906
+ > Model[['add', True, 'add', 6, True, True]] 42.415
+ > Model[['add', True, 'add', 12, True, True]] 35.561
+***********simulation done**********
+processing the SKU n° 64133804
+ > Model[['add', False, 'add', 6, True, True]] 3.767
+ > Model[['add', False, 'add', 12, True, True]] 3.567
+ > Model[['add', True, 'add', 6, True, True]] 3.767
+ > Model[['add', True, 'add', 12, True, True]] 3.564
+***********simulation done**********
+processing the SKU n° 64937481
+ > Model[['add', False, 'add', 6, True, True]] 22.186
+ > Model[['add', False, 'add', 12, True, True]] 21.031
+ > Model[['add', True, 'add', 6, True, True]] 22.183
+ > Model[['add', True, 'add', 12, True, True]] 22.001
+***********simulation done**********
+processing the SKU n° 65069683
