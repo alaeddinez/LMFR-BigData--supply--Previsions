@@ -5,6 +5,8 @@ import matplotlib.pyplot  as plt
 from data import LoadSales
 import logging as log
 from models import *
+
+#TODO:add the pid trick to see if program has finished executing or not
 if __name__ == "__main__":
     ############################################
     # >> Process start
@@ -12,6 +14,7 @@ if __name__ == "__main__":
     SALES_df = LoadSales('teradata_sales')
     list_ref = np.unique(SALES_df.dataframe.NUM_ART)
     RESULT_FORECAST = pd.DataFrame()
+    #TODO: add tqdm on the loop
     #TODO : parallelize the outer loop is better than inner loop?
     for ref in list_ref :
         print("processing the SKU n° " + str (ref))
@@ -48,6 +51,7 @@ if __name__ == "__main__":
             data_final = data_final.reset_index(drop = True)
             data_final["sku"] = ref
             #data_final.to_csv("/home/alaeddinez/MyProjects/LMFR-BigData--supply--Previsions/output/tables/"+ str(ref)+".csv")
+            #TODO : ameliorer le plot : ajouter 3 couleur (train, test ,futur)
             plt.figure(figsize=(10,6))
             plt.plot(data_final.date,data_final.sales)
             plt.plot(data_final.date,data_final.forecast)
@@ -55,4 +59,10 @@ if __name__ == "__main__":
             RESULT_FORECAST = RESULT_FORECAST.append(data_final)
             #TODO: si forecast est negative => rendre la valeur = 0
             #TODO: ajouter le coeff de variation pour chaque produit 
+    #writing the result in a csv
     RESULT_FORECAST.to_csv("/home/alaeddinez/MyProjects/LMFR-BigData--supply--Previsions/output/tables/"+ "RES_FINAL" +".csv")
+
+
+
+    #using the interpretability model 
+    
