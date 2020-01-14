@@ -5,6 +5,8 @@ import matplotlib.pyplot  as plt
 from data import LoadSales
 import logging as log
 from models import *
+from interpretability import evaluate_all,diag_ability_performance
+from tqdm import tqdm
 
 #TODO:add the pid trick to see if program has finished executing or not
 if __name__ == "__main__":
@@ -16,7 +18,7 @@ if __name__ == "__main__":
     RESULT_FORECAST = pd.DataFrame()
     #TODO: add tqdm on the loop
     #TODO : parallelize the outer loop is better than inner loop?
-    for ref in list_ref :
+    for ref in tqdm(list_ref) :
         print("processing the SKU n° " + str (ref))
         #TODO:add weekly process
         df_i = SALES_df.transform(freq ="month",sku = ref)
@@ -58,6 +60,7 @@ if __name__ == "__main__":
             plt.savefig("/home/alaeddinez/MyProjects/LMFR-BigData--supply--Previsions/output/plots/"+ str(ref) + '.png')
             RESULT_FORECAST = RESULT_FORECAST.append(data_final)
             #TODO: si forecast est negative => rendre la valeur = 0
+            #TODO : ajouter l'intervalle de confiance !!
             #TODO: ajouter le coeff de variation pour chaque produit 
     #writing the result in a csv
     RESULT_FORECAST.to_csv("/home/alaeddinez/MyProjects/LMFR-BigData--supply--Previsions/output/tables/"+ "RES_FINAL" +".csv")
@@ -65,4 +68,20 @@ if __name__ == "__main__":
 
 
     #using the interpretability model 
-    
+    data = pd.read_csv("/home/alaeddinez/MyProjects/LMFR-BigData--supply--Previsions/output/tables/"+ "RES_FINAL" +".csv")
+    #using only the test set part
+    data = data.dropna()
+    DAP = diag_ability_performance(data.sales.values,data.forecast.values, data.date.values, data.sku.values)
+    DAP.to_csv("/home/alaeddinez/MyProjects/LMFR-BigData--supply--Previsions/output/tables/"+ "ROC" +".csv",sep= ";",index =False) 
+    #this csv is used in a powerbi dashboard to visualize which sku have better performed and which ones created created a huge gap 
+    list_dicts = []
+    for sku in np.unique(data.sku) :     
+        data_sku = data[data.sku == sku ]
+        kpi_sku = {"sku" : sku}
+        kpi_sku.update(evaluate_all(data_sku.sales.values,data_sku.forecast.values))
+        list_dicts.append(kpi_sku)
+    #create the dataframe of the kpi for each sku from the dict created
+    kpi_df = pd.DataFrame(list_dicts,columns = list_dicts[0].keys())
+    kpi_df.to_csv("/home/alaeddinez/MyProjects/LMFR-BigData--supply--Previsions/output/tables/"+ "kpi_df" +".csv",sep= ";",index =False) 
+
+        
