@@ -13,21 +13,26 @@ if __name__ == "__main__":
     ############################################
     # >> Process start
     log.info('** Load Data...')
-    SALES_df = LoadSales('teradata_sales','teradata')
+    SALES_df = LoadSales('louis_sales_bq', option_source="bq")
     list_ref = np.unique(SALES_df.dataframe.NUM_ART)
     RESULT_FORECAST = pd.DataFrame()
+    res_tail  = pd.DataFrame()
     #TODO: add tqdm on the loop
     #TODO : parallelize the outer loop is better than inner loop?
     for ref in tqdm(list_ref) :
-        print("processing the SKU n° " + str (ref))
+        print("processing the SKU n " + str (ref))
         #TODO:add weekly process
-        df_i = SALES_df.transform(freq ="month",sku = ref)
-        data = df_i.sales
+        df_i = SALES_df.transform(freq ="month",sku = ref,del_current=True)
+        df_tail_i = df_i.tail(2)
+        res_tail = res_tail.append(df_tail_i)
+        # delete dec & january from training
+        df_i = df_i[:-2]
+        data = df_i.sales.astype(float)
         # data split
-        n_test = 14 
-        step = 12
+        n_test = 12
+        step = 4
         if sum(data.values[:-n_test]) == 0 :
-            print("not enough data to forecast the sku n° " +str(ref))
+            print("not enough data to forecast the sku n " +str(ref))
         else :    
             # model configs
             #TODO:adding/deleting other elemnts in seasonal
@@ -35,27 +40,20 @@ if __name__ == "__main__":
             scores = grid_search(data.values, cfg_list, n_test)
             print('***********simulation done**********')
             #selecting the best model (a low number of RMSE)
-            best_cfg = eval( scores.pop(0)[0])
+            best_cfg = eval( scores.pop(0)[0] )
             y_hat_test = forecast_model(data.values[:-n_test], config = best_cfg, h = n_test - 1 )
-            errors = data.tail(n_test).values - y_hat_test
-            errors_std = np.std(errors)
             #forecast the data
             y_hat = forecast_model(data.values, config = best_cfg, h = step - 1 )
-            upper, lower = conf_int(errors_std, y_hat, 1.150)
             #crete the dates for the forecasts
             date_projection = pd.date_range(df_i.date[len(df_i)-1],periods = step+1 ,freq='MS')[1:]
             data_final = df_i.copy()
             data_final["forecast"] = np.NaN
-            data_final.forecast[-n_test:] = y_hat_test
-            data_final["upper"] = np.NaN
-            data_final["lower"] = np.NaN
+            data_final.forecast[-n_test:]= y_hat_test
             #adding the forecast to the past data
             data_future = pd.DataFrame()
             data_future["date"] = date_projection
             data_future["sales"] = np.NaN
             data_future["forecast"] = y_hat
-            data_future["upper"] = upper
-            data_future["lower"] = lower
             data_final = data_final.append(data_future)
             data_final = data_final.reset_index(drop = True)
             data_final["sku"] = ref
@@ -89,4 +87,6 @@ if __name__ == "__main__":
         list_dicts.append(kpi_sku)
     #create the dataframe of the kpi for each sku from the dict created
     kpi_df = pd.DataFrame(list_dicts,columns = list_dicts[0].keys())
-    kpi_df.to_csv("/home/alaeddinez/MyProjects/LMFR-BigData--supply--Previsions/output/tables/"+ "kpi_df" +".csv",sep= ";",index =False)
+    kpi_df.to_csv("/home/alaeddinez/MyProjects/LMFR-BigData--supply--Previsions/output/tables/"+ "kpi_df" +".csv",sep= ";",index =False) 
+
+        
