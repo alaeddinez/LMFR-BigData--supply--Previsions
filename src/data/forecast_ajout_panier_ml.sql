@@ -1,0 +1,1 @@
+select * from `big-data-dev-lmfr.supply_test.nb_ajout_panier_prev_ml`

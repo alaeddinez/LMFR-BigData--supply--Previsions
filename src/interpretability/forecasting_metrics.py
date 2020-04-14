@@ -1,5 +1,6 @@
 import numpy as np
-
+#https://journals.plos.org/plosone/article?id=10.1371/journal.pone.0174202
+#https://www.forecastpro.com/Trends/forecasting101August2011.html
 EPSILON = 1e-10
 
 

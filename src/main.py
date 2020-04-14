@@ -7,35 +7,40 @@ import logging as log
 from models import *
 from interpretability import evaluate_all,diag_ability_performance
 from tqdm import tqdm
+import requests
+
 
 #TODO:add the pid trick to see if program has finished executing or not
 if __name__ == "__main__":
     ############################################
     # >> Process start
     log.info('** Load Data...')
-    SALES_df = LoadSales('teradata_sales','teradata')
+    web_hook_url = "https://hooks.slack.com/services/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" 
+    # SALES_df = LoadSales('Gardena', 'teradata')
+    SALES_df = LoadSales('Gardena_bq', 'bq')
     list_ref = np.unique(SALES_df.dataframe.NUM_ART)
     RESULT_FORECAST = pd.DataFrame()
-    #TODO: add tqdm on the loop
-    #TODO : parallelize the outer loop is better than inner loop?
-    for ref in tqdm(list_ref) :
-        print("processing the SKU n° " + str (ref))
-        #TODO:add weekly process
-        df_i = SALES_df.transform(freq ="month",sku = ref)
+    # TODO: add tqdm on the loop
+    # TODO : parallelize the outer loop is better than inner loop?
+    for ref in tqdm(list_ref):
+        print("processing the SKU n° "+str (ref))
+        # TODO:add weekly process
+        df_i = SALES_df.transform(freq="month", sku=ref)
         data = df_i.sales
+        data = df_i.sales.astype(float)
         # data split
-        n_test = 14 
+        n_test = 14
         step = 12
         if sum(data.values[:-n_test]) == 0 :
             print("not enough data to forecast the sku n° " +str(ref))
         else :    
             # model configs
             #TODO:adding/deleting other elemnts in seasonal
-            cfg_list = exp_smoothing_configs(seasonal=[6,12])
+            cfg_list = exp_smoothing_configs(seasonal=[6, 12])
             scores = grid_search(data.values, cfg_list, n_test)
             print('***********simulation done**********')
             #selecting the best model (a low number of RMSE)
-            best_cfg = eval( scores.pop(0)[0])
+            best_cfg = eval(scores.pop(0)[0])
             y_hat_test = forecast_model(data.values[:-n_test], config = best_cfg, h = n_test - 1 )
             errors = data.tail(n_test).values - y_hat_test
             errors_std = np.std(errors)
@@ -57,27 +62,32 @@ if __name__ == "__main__":
             data_future["upper"] = upper
             data_future["lower"] = lower
             data_final = data_final.append(data_future)
-            data_final = data_final.reset_index(drop = True)
+            data_final = data_final.reset_index(drop=True)
             data_final["sku"] = ref
             #data_final.to_csv("/home/alaeddinez/MyProjects/LMFR-BigData--supply--Previsions/output/tables/"+ str(ref)+".csv")
             #TODO : ameliorer le plot : ajouter 3 couleur (train, test ,futur)
-            plt.figure(figsize=(10,6))
-            plt.plot(data_final.date,data_final.sales)
-            plt.plot(data_final.date,data_final.forecast)
-            plt.savefig("/home/alaeddinez/MyProjects/LMFR-BigData--supply--Previsions/output/plots/"+ str(ref) + '.png')
+            # plt.figure(figsize=(10,6))
+            # plt.plot(data_final.date,data_final.sales)
+            # plt.plot(data_final.date,data_final.forecast)
+            # plt.savefig("/home/alaeddinez/MyProjects/LMFR-BigData--supply--Previsions/output/plots/"+ str(ref) + '.png')
             RESULT_FORECAST = RESULT_FORECAST.append(data_final)
-            #TODO: si forecast est negative => rendre la valeur = 0
+            
             #TODO : ajouter l'intervalle de confiance !!
             #TODO: ajouter le coeff de variation pour chaque produit 
     #writing the result in a csv
+    #TODO: si forecast est negative => rendre la valeur = 0
+    RESULT_FORECAST.forecast[ RESULT_FORECAST.forecast < 0 ] = 0
     RESULT_FORECAST.to_csv("/home/alaeddinez/MyProjects/LMFR-BigData--supply--Previsions/output/tables/"+ "RES_FINAL" +".csv")
-
+    print("saving forecasts")
+    slack_message = {'text' : 'saving forecasts in csv ! :)'}
+    requests.post(url=web_hook_url,
+                  data=json.dumps(slack_message))   
 
 
     #using the interpretability model 
     data = pd.read_csv("/home/alaeddinez/MyProjects/LMFR-BigData--supply--Previsions/output/tables/"+ "RES_FINAL" +".csv")
     #using only the test set part
-    data = data.dropna()
+    data = data[[ 'date', 'sales', 'forecast','sku']].dropna()
     DAP = diag_ability_performance(data.sales.values,data.forecast.values, data.date.values, data.sku.values)
     DAP.to_csv("/home/alaeddinez/MyProjects/LMFR-BigData--supply--Previsions/output/tables/"+ "ROC" +".csv",sep= ";",index =False) 
     #this csv is used in a powerbi dashboard to visualize which sku have better performed and which ones created created a huge gap 

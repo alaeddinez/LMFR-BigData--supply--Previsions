@@ -1,0 +1,1 @@
+select * from `big-data-dev-lmfr.supply_test.pv_covid_prev`

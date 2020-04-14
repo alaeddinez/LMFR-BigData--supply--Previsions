@@ -11,11 +11,18 @@ os.environ['TERADATA_PWD'] = '%BeegD@tq1'
 #PATH = ""
 PATH = './data/'
 
-SOURCE_DICT = { 'teradata_sales': PATH+'load_sales.sql',
-                'louis_sales' : PATH + 'load_sales_test.sql',
-                'louis_sales_bq': PATH + 'load_sales_bq.sql',
-                'ga_pageviews': PATH+'load_monthly_pageviews.sql',
-                'test' : PATH + 'bq_test.sql'
+SOURCE_DICT = {
+               'gardena_daily': PATH + 'four_bq_daily.sql',
+               'pv': PATH + 'PV.sql',
+               'max_comm': PATH + 'max_comm.sql',
+               'comm': PATH + 'comm.sql',
+               'forecast_pv': PATH + 'forecast_pv.sql',
+               'nb_ajout_panier': PATH + 'nb_ajout_panier.sql',
+               'forecast_ajout_panier': PATH + 'forecast_ajout_panier.sql',
+               'panier_avail': PATH + 'panier_avail.sql',
+               'no_oreo_ajout':PATH + 'no_oreo_ajout.sql',
+                'forecast_ajout_panier_ml': PATH + 'forecast_ajout_panier_ml.sql'
+
                }
 
 
@@ -92,8 +99,16 @@ class LoadSales():
             on =["date"], how = "left")
             transformed_sales = monthly_sales.fillna(0)
         #TODO : prepare the transformation in case of week
-        elif freq == 'week':
-            weekly_sales = self.agg_weekly_sales()
+        elif freq == 'day':
+            monthly_sales = self.dataframe
+            date_range_df = monthly_sales
+            
+            #deleting the date of the current month (we suppose that the data for the current month is not complete)
+            if del_current :
+                date_range_df.drop(date_range_df.tail(1).index, inplace=True)
+            #selecting the productsku from the parameter passed in the method
+            monthly_sales = monthly_sales[monthly_sales.NUM_ART == sku]
+            
         else:
             log.info("ERROR argument perimeter")
             sys.exit()
@@ -124,3 +139,7 @@ class LoadPageviews():
             ------
         """
         return(self.dataframe)
+
+
+
+

@@ -1,0 +1,14 @@
+select dat_jou as date , 
+ sum(COVER_10P_NB_ART	) COVER_10P_NB_ART,
+ sum(COVER_20P_NB_ART	) COVER_20P_NB_ART,
+ sum(COVER_30P_NB_ART	) COVER_30P_NB_ART,
+ sum(COVER_40P_NB_ART	) COVER_40P_NB_ART,
+ sum(COVER_50P_NB_ART	) COVER_50P_NB_ART,
+ sum(COVER_60P_NB_ART	) COVER_60P_NB_ART,
+ sum(COVER_70P_NB_ART	) COVER_70P_NB_ART,
+ sum(COVER_80P_NB_ART	) COVER_80P_NB_ART,
+ sum(COVER_90P_NB_ART	) COVER_90P_NB_ART
+
+from `big-data-dev-lmfr.COVID19_Tunnel_Commande_DEV.DASHBOARD_Add_To_Cart_By_Cat`
+group by dat_jou
+order by dat_jou

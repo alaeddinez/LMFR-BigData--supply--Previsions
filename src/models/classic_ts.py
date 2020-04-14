@@ -30,7 +30,14 @@ def exp_smoothing_forecast(history, config):
 # root mean squared error or rmse
 def measure_rmse(actual, predicted):
 	return sqrt(mean_squared_error(actual, predicted))
- 
+
+
+def conf_int(std, predicted, z):
+	
+	upper = predicted + z*std
+	lower = predicted - z*std
+	return upper, lower
+
 # split a univariate dataset into train/test sets
 def train_test_split(data, n_test):
 	return data[:-n_test], data[-n_test:]
@@ -81,7 +88,7 @@ def grid_search(data, cfg_list, n_test, parallel=True):
 	scores = None
 	if parallel:
 		# execute configs in parallel
-		executor = Parallel(n_jobs=cpu_count(), backend='multiprocessing')
+		executor = Parallel(n_jobs= -1 , backend='multiprocessing')
 		tasks = (delayed(score_model)(data, n_test, cfg) for cfg in cfg_list)
 		scores = executor(tasks)
 	else:
@@ -129,9 +136,13 @@ def forecast_model(history, config,h):
     history = array(history)
     model = ExponentialSmoothing(history, trend=t, damped=d, seasonal=s, seasonal_periods=p)
     # fit model
-    model_fit = model.fit(optimized=True, #use_boxcox=b, #remove_bias=r
+    model_fit = model.fit(optimized=True 
+	#,use_boxcox=b, #remove_bias=r
 	)
     #make one step forecast
     yhat = model_fit.predict(start=len(history), end = len(history)+ h)
     return yhat
+
+
+
 
